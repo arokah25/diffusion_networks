@@ -19,7 +19,7 @@ This repository contains two diffusion-based generative modeling projects:
 
 ## What Are Diffusion Models?
 
-Diffusion models are generative models that learn to reverse a forward process that gradually corrupts data with Gaussian noise. During training, a neural network is optimized to predict the original standard normal noise \( \epsilon \sim \mathcal{N}(0, I) \) that was used to generate a noised input \( x_t \) from a clean sample \( x_0 \). At sampling time, the model starts from pure noise and denoises it step by step, ultimately producing a new sample from the learned distribution.
+Diffusion models are generative models that learn to reverse a forward process that gradually corrupts data with Gaussian noise. During training, a neural network is optimized to predict the original standard normal noise `epsilon ~ N(0, I)` that was used to generate a noised input `x_t` from a clean sample `x_0`. At sampling time, the model starts from pure noise and denoises it step by step, ultimately producing a new sample from the learned distribution.
 
 ---
 
@@ -29,13 +29,13 @@ Diffusion models are generative models that learn to reverse a forward process t
 
 - Generates synthetic 1D data from a mixture of Gaussians
 - Implements forward diffusion and reverse sampling explicitly
-- Trains a neural network to predict the total standard normal noise used in generating \( x_t \)
+- Trains a neural network to predict the total standard normal noise used in generating `x_t`
 - Visualizes the forward process and reverse denoising trajectory
 
 ### `DDPM_image_generation.ipynb`
 
 - Loads and preprocesses MNIST images
-- Defines a U-Net to predict the original noise realization from a noised image \( x_t \) and timestep \( t \)
+- Defines a U-Net to predict the original noise realization from a noised image `x_t` and timestep `t`
 - Uses the `GaussianDiffusion` class to manage the noise schedule and sampling
 - Trains with mean squared error between true and predicted noise
 - Generates digits from Gaussian noise using the learned reverse process
@@ -45,19 +45,15 @@ Diffusion models are generative models that learn to reverse a forward process t
 ## Key Concepts
 
 - **Forward Process (Markovian):**  
-  Adds noise gradually over time using:
-  \[
-  x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \cdot \epsilon
-  \]
+  Adds noise gradually over time using the formula:  
+  `x_t = sqrt(alpha_bar_t) * x_0 + sqrt(1 - alpha_bar_t) * epsilon`
 
 - **Noise Prediction:**  
-  The model is trained to predict \( \epsilon \), the total noise realization used to produce \( x_t \) from \( x_0 \), not the noise added at an individual step.
+  The model is trained to predict `epsilon`, the total noise realization used to produce `x_t` from `x_0`. It does not predict the noise added at a single step.
 
 - **Reverse Process:**  
-  Uses the predicted \( \epsilon \) to compute the mean of the reverse distribution:
-  \[
-  \mu_\theta(x_t, t) = \frac{1}{\sqrt{\alpha_t}} \left(x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \cdot \epsilon_\theta(x_t, t)\right)
-  \]
+  The predicted `epsilon_theta(x_t, t)` is used to compute the mean of the reverse distribution:  
+  `mu_theta(x_t, t) = (1 / sqrt(alpha_t)) * (x_t - (1 - alpha_t) / sqrt(1 - alpha_bar_t) * epsilon_theta(x_t, t))`  
   The model denoises by sampling from a Gaussian centered at this mean.
 
 ---
