@@ -1,0 +1,6 @@
+torch>=1.12
+torchvision>=0.13
+matplotlib>=3.5
+seaborn>=0.11
+tqdm>=4.64
+denoising-diffusion-pytorch>=1.6.0
